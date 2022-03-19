@@ -35,27 +35,21 @@ for index, row in data[start_num:].iterrows():
         bot.press("down_arrow")
     bot.press("enter")
     next_form(bot)
+    
     time.sleep(1) #전공명 서버 딜레이
     univ_type = row["학교"]
     for _ in range(1, univ_type):
         bot.press('tab')
     bot.press("enter") #전공명
     next_form(bot)
-    class_type = row["과목유형"] #과목유형
-    if class_type.startswith("교양"):
-        count = 1
-    elif class_type.startswith("전공"):
-        count = 0
-    for i in range(count):
-        bot.press("down_arrow")
-    bot.press("enter")
-    next_form(bot)
+    
     year = row["수강년도"] #수강년도
     count = class_taken_year - year
     for i in range(count):
         bot.press("down_arrow")
     bot.press("enter")
     next_form(bot)
+
     semester = row["학기"] #학기
     if isinstance(semester, int):
         
@@ -68,11 +62,17 @@ for index, row in data[start_num:].iterrows():
         bot.press("down_arrow")
     bot.press("enter")
     next_form(bot)
-    class_name = row["과목명"] #과목명
-    pyperclip.copy(class_name)
-    bot.pressHoldRelease("ctrl", "v")
-    bot.press("tab")
+
+    class_type = row["과목유형"] #과목유형
+    if class_type.find("교양"):
+        count = 1
+    elif class_type.find("전공"):
+        count = 0
+    for i in range(count):
+        bot.press("down_arrow")
     bot.press("enter")
+    next_form(bot)
+
     is_retaken = row["재수강"] #재수강여부
     if not is_retaken:
         count = 1
@@ -84,12 +84,20 @@ for index, row in data[start_num:].iterrows():
     bot.press("tab")
     bot.press("tab")
     bot.press("enter")
+    
+    class_name = row["과목명"] #과목명
+    pyperclip.copy(class_name)
+    bot.pressHoldRelease("ctrl", "v")
+    bot.press("tab")
+    bot.press("enter")
+
     class_point = row["취득학점"] #취득학점
     count = class_point-1
-    for i in range(count):
+    for i in range(int(count)):
         bot.press("down_arrow")
     bot.press("enter")
     next_form(bot)
+
     class_grade = row["성적"] #성적
     grade_dict = {"A+": 0,
                   "A": 1,
@@ -112,6 +120,7 @@ for index, row in data[start_num:].iterrows():
     for i in range(count):
         bot.press("down_arrow")
     bot.press("enter")
+
     next_form(bot) #추가버튼
     if index%10 == 9: #10단위 중간 저장
         time.sleep(1) #딜레이

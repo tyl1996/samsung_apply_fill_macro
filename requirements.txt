@@ -1,4 +1,5 @@
 pyperclip
 pandas
-pywin32
+pywin32==225
 openpyxl
+pyyaml
